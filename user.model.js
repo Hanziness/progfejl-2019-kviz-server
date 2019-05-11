@@ -6,8 +6,9 @@ const bcrypt = require('bcryptjs');
 var userSchema = new mongoose.Schema({
     username: {type: String, unique: true, required: true, lowercase: true},
     password: {type: String, required: true},
-    age: {type: Number}
-}, {collection: 'user'});
+    admin: {type: Boolean, required: true},
+    pontszam: {type: Number}
+}, {collection: 'users'});
 
 userSchema.pre('save', function(next) {
     var user = this;
@@ -36,3 +37,8 @@ userSchema.methods.comparePasswords = function(password, next) {
 };
 
 mongoose.model('user', userSchema);
+
+function rankingUsers(allUsersArray) {
+    allUsersArray.sort((user1, user2) => (user1.pontszam > user2.pontszam) ? 1 : -1)
+    return allUsersArray
+}
