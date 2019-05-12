@@ -30,7 +30,7 @@ require('./user.model');
 require('./quizes.model');
 
 const userModel = mongoose.model('user');
-const quizesModel = mongoose.model('quiz');
+const quizModel = mongoose.model('quiz');
 
 mongoose.connect(dbUrl);
 
@@ -76,7 +76,59 @@ app.use(passport.session());
 app.use('/', require('./routes'));
 app.use('/proba', require('./routes'));
 
-app.listen(5000, function() {
-    console.log('the server is running');
-});
+process.env.DEBUG_QUIZ = true;
+
+
+const xl = require('excel4node');
+
+if (process.env.DEBUG_QUIZ) {
+    console.log('exporting excel table...');
+
+    var wb = new xl.Workbook();
+
+    var style = wb.createStyle({
+        font: {
+          color: '#FFFFFF',
+          size: 12,
+        },
+        numberFormat: '$#,##0.00; ($#,##0.00); -',
+    });
+
+
+    quizes = quizModel.findAll();
+    
+    for (var i = 0; i < quizes.length; i++) {
+        var actualQuiz = quizes[i];
+        var name = actualQuiz.quiz_nev;
+        var ws = wb.addWorksheet(name);
+
+        for (var j = 0; j < actualQuiz.kerdesek.length; j++) {
+            var currentQuestion = actualQuiz.kerdesek[i];
+            ws.cell(i+1, 1).string(currentQuestion.leiras);
+            
+            var helyes = 0;
+            var k;
+            for (k = 0; k < valaszok.length; k++) {
+                ws.cell(i+1, 1+k+1).string(currentQuestion.valaszok[k].nev);
+                if (currentQuestion.valaszok[k].helyes) {
+                    helyes = k;
+                }
+            }
+
+            ws.cell(i+1, 1+k+1).string(helyes);
+
+        }
+
+    }
+
+    ws.cell(1, 1).number(100).style(style);
+    ws.cell(1, 2).string('macska').style(style);
+
+    wb.write('quizes.xlsx');
+
+} else {
+    app.listen(5000, function() {
+        console.log('the server is running');
+    });
+}
 

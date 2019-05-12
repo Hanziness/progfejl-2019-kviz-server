@@ -23,3 +23,7 @@ function deleteQuiz(qName, next) {
 function findQuiz(qName, next) {
   return Quiz.find({ name: qName});
 }
+
+function findAll() {
+  
+}

@@ -79,15 +79,6 @@ router.post('/deletequiz', function(req, res) {
     }
 });
 
-
-
-
-
-
-
-
-
-
 // Ezek nem is kellenek?
 
 router.get('/', function(req, res) {

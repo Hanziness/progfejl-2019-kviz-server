@@ -24,6 +24,7 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "excel4node": "^1.7.2",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "mongoose": "^5.5.7",
