@@ -121,9 +121,6 @@ if (process.env.DEBUG_QUIZ) {
 
     }
 
-    ws.cell(1, 1).number(100).style(style);
-    ws.cell(1, 2).string('macska').style(style);
-
     wb.write('quizes.xlsx');
 
 } else {
