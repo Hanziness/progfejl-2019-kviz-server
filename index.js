@@ -27,9 +27,10 @@ const dbUrl = "mongodb://localhost:27017";
 app.set('dbUrl', dbUrl);
 
 require('./user.model');
-require('./book.model');
+require('./quizes.model');
 
 const userModel = mongoose.model('user');
+const quizesModel = mongoose.model('quiz');
 
 mongoose.connect(dbUrl);
 
@@ -40,7 +41,6 @@ mongoose.connection.on('connected', function() {
 mongoose.connection.on('error', function() {
     console.log('db connection error');
 });
-
 
 passport.serializeUser(function(user, done) {
     if(!user) return done("serializalasi hiba", user);
