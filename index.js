@@ -22,7 +22,7 @@ const cors = require('cors');
 
 // docker run -d -p 27017:27017 -v $PWD/mongo:/etc/mongo --name mymongo mongo
 
-const dbUrl = "mongodb://localhost:27017";
+const dbUrl = "mongodb://ocean:man@cluster0-shard-00-00-zqs1c.mongodb.net:27017,cluster0-shard-00-01-zqs1c.mongodb.net:27017,cluster0-shard-00-02-zqs1c.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
 
 app.set('dbUrl', dbUrl);
 
@@ -31,6 +31,7 @@ require('./quizes.model');
 
 const userModel = mongoose.model('user');
 const quizModel = mongoose.model('quiz');
+
 
 mongoose.connect(dbUrl);
 

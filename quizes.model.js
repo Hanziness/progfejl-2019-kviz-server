@@ -11,19 +11,20 @@ var quizSchema = new mongoose.Schema(
   { collection: 'quizes' }
 )
 
-var Quiz = mongoose.model('quiz', quizSchema)
 
-function addNewQuiz(qName, qKerdesek) {
+quizSchema.methods.addNewQuiz = function(qName, qKerdesek) {
   return new Quiz({quiz_nev: qName, kerdesek: qKerdesek})
 }
-function deleteQuiz(qName, next) {
+quizSchema.methods.deleteQuiz = function(qName, next) {
   return Quiz.deleteOne({ name: qName }, next);
 }
 
-function findQuiz(qName, next) {
+quizSchema.methods.findQuiz = function(qName, next) {
   return Quiz.find({ name: qName});
 }
 
-function findAll() {
+quizSchema.methods.findAll = function() {
   
 }
+
+mongoose.model('quiz', quizSchema)
