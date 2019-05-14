@@ -79,6 +79,12 @@ router.post('/deletequiz', function(req, res) {
     }
 });
 
+router.post('/sendscore', function(req, res) {
+    if (req.isAuthenticated() && res.session.passport.user.admin) {
+        // quizModel.updateScore(req.body.username, req.body.score, () => { res.status(200).send("updated!"); });
+    }
+});
+
 // Ezek nem is kellenek?
 
 router.get('/', function(req, res) {
