@@ -63,7 +63,9 @@ router.post('/newquiz', function(req, res) {
 
 router.post('/quiz', function(req, res) {
     if (req.isAuthenticated()) {
-        res.status(200).send(quizModel.findQuiz(req.body.name, null));
+        quizModel.findQuiz(req.body.name, (quiz) => {
+            res.status(200).send(quiz);
+        });
     } else {
         res.status(403).send("Couldn't get quiz");
     }
@@ -80,8 +82,10 @@ router.post('/deletequiz', function(req, res) {
 });
 
 router.post('/sendscore', function(req, res) {
-    if (req.isAuthenticated() && res.session.passport.user.admin) {
-        // quizModel.updateScore(req.body.username, req.body.score, () => { res.status(200).send("updated!"); });
+    if (req.isAuthenticated()) {
+        quizModel.updateScore(req.body.username, req.body.score, () => {
+             res.status(200).send("updated!"); 
+        });
     }
 });
 
