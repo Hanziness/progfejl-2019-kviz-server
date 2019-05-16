@@ -5,6 +5,9 @@ const userModel = mongoose.model('user');
 const quizModel = mongoose.model('quiz');
 var router = express.Router();
 
+quiz = new quizModel();
+user = new userModel();
+
 router.post('/register', function(req, res) {
     if(!req.body.username || !req.body.password) {
         return res.status(404).send("username or password missing");
@@ -46,7 +49,7 @@ router.post('/logout', function(req, res) {
 
 router.post('/toplist', function(req, res) {
     if(req.isAuthenticated()) {
-        res.status(200).send(userModel.rankingUsers());
+        res.status(200).send(user.rankingUsers());
     } else {
         res.status(403).send("No toplist");
     }
@@ -54,16 +57,16 @@ router.post('/toplist', function(req, res) {
 
 router.post('/newquiz', function(req, res) {
     if (req.isAuthenticated() && req.session.passport.user.admin) {
-        quizModel.addNewQuiz(req.body.name, req.body.questions);
+        quiz.addNewQuiz(req.body.name, req.body.questions);
         res.status(200).send("Quiz added");
     } else {
         res.status(403).send("Couldn't add quiz");
     }
 });
 
-router.post('/quiz', function(req, res) {
+router.get('/quiz', function(req, res) {
     if (req.isAuthenticated()) {
-        quizModel.findQuiz(req.body.name, (quiz) => {
+        quiz.findQuiz(req.body.name, (quiz) => {
             res.status(200).send(quiz);
         });
     } else {
@@ -73,7 +76,7 @@ router.post('/quiz', function(req, res) {
 
 router.post('/deletequiz', function(req, res) {
     if (req.isAuthenticated() && res.session.passport.user.admin) {
-        quizModel.deleteQuiz(req.body.name, () => {
+        quiz.deleteQuiz(req.body.name, () => {
             res.status(200).send("deleted succesfully");
         });
     } else {
@@ -83,7 +86,7 @@ router.post('/deletequiz', function(req, res) {
 
 router.post('/sendscore', function(req, res) {
     if (req.isAuthenticated()) {
-        quizModel.updateScore(req.body.username, req.body.score, () => {
+        user.updateScore(req.body.username, req.body.score, () => {
              res.status(200).send("updated!"); 
         });
     }
