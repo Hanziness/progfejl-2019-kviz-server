@@ -22,7 +22,7 @@ const cors = require('cors');
 
 // docker run -d -p 27017:27017 -v $PWD/mongo:/etc/mongo --name mymongo mongo
 
-const dbUrl = "mongodb://ocean:man@cluster0-shard-00-00-zqs1c.mongodb.net:27017,cluster0-shard-00-01-zqs1c.mongodb.net:27017,cluster0-shard-00-02-zqs1c.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
+const dbUrl = "mongodb+srv://ocean:man@cluster0-zqs1c.mongodb.net/test?retryWrites=true";
 
 app.set('dbUrl', dbUrl);
 
@@ -33,14 +33,15 @@ const userModel = mongoose.model('user');
 const quizModel = mongoose.model('quiz');
 
 
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl, { useNewUrlParser: true });
 
 mongoose.connection.on('connected', function() {
     console.log('db connected');
 });
 
-mongoose.connection.on('error', function() {
+mongoose.connection.on('error', function(err) {
     console.log('db connection error');
+    console.log(err);
 });
 
 passport.serializeUser(function(user, done) {
@@ -68,16 +69,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'PUT', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(expressSession({secret: '12354456462almajjimnhgiknb,'}));
+app.use(expressSession({
+    secret: '12354456462almajjimnhgiknb,',
+    cookie: { httpOnly: false }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', require('./routes'));
 app.use('/proba', require('./routes'));
 
-process.env.DEBUG_QUIZ = true;
+// process.env.DEBUG_QUIZ = true;
 
 
 const xl = require('excel4node');
