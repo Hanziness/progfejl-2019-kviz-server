@@ -89,7 +89,7 @@ app.use('/proba', require('./routes'));
 
 var quizfunctions = require('./quizFunctions.js');
 
-process.env.DEBUG_QUIZ = true;
+//process.env.DEBUG_QUIZ = true;
 if (process.env.DEBUG_QUIZ) {
     console.log('exporting excel table...');
 
