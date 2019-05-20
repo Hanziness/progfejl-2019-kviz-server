@@ -1,21 +1,29 @@
 const mongoose = require('mongoose')
 var quizSchema = mongoose.model('quiz')
 
-exports.addNewQuiz = function(qId, qName, qKerdesek) {
+var addNewQuiz = function(qId, qName, qKerdesek) {
   quizSchema.create({
     _id: qId,
     quiz_nev: qName,
     questions: qKerdesek
   })
 }
-exports.deleteQuiz = function(qName) {
+var deleteQuiz = function(qName) {
   return quizSchema.deleteOne({ quiz_nev: qName })
 }
 
-exports.findOneQuiz = function(qName) {
+var findOneQuiz = function(qName) {
   return quizSchema.find({ quiz_nev: qName})
 }
 
-exports.findAllQuiz = function() {
+var findAllQuiz = function() {
   return quizSchema.find()
+}
+
+
+module.exports = {
+  addNewQuiz: addNewQuiz,
+  deleteQuiz: deleteQuiz,
+  findOneQuiz: findOneQuiz,
+  findAllQuiz: findAllQuiz
 }

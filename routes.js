@@ -5,6 +5,9 @@ const userModel = mongoose.model('user');
 const quizModel = mongoose.model('quiz');
 var router = express.Router();
 
+var quizfunctions = require('./quizFunctions.js');
+var userfunctions = require('./userFunctions.js');
+
 quiz = new quizModel();
 user = new userModel();
 
@@ -66,8 +69,14 @@ router.post('/newquiz', function(req, res) {
 
 router.get('/quiz', function(req, res) {
     if (req.isAuthenticated()) {
-        quiz.findQuiz(req.body.name, (quiz) => {
-            res.status(200).send(quiz);
+        console.log(req.query.name);
+        var q = quizfunctions.findOneQuiz(req.query.name);        
+        q.exec(function(err, docs){
+            if (err) {
+                res.status(403).send("Quiz not found");
+            } else {
+                res.status(200).send(docs);
+            }
         });
     } else {
         res.status(403).send("Couldn't get quiz");
