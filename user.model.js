@@ -36,13 +36,4 @@ userSchema.methods.comparePasswords = function(password, next) {
     });
 };
 
-userSchema.methods.updateScore = function(username, score, next) {
-
-}
-
 mongoose.model('user', userSchema);
-
-function rankingUsers(allUsersArray) {
-    allUsersArray.sort((user1, user2) => (user1.pontszam > user2.pontszam) ? 1 : -1)
-    return allUsersArray
-}
