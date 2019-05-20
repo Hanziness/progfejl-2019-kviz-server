@@ -6,7 +6,7 @@ const quizModel = mongoose.model('quiz');
 var router = express.Router();
 
 var quizfunctions = require('./quizFunctions.js');
-var userfunctions = require('./userFunctions.js');
+var userfunctions = require('./userfunctions.js');
 
 quiz = new quizModel();
 user = new userModel();
@@ -50,9 +50,16 @@ router.post('/logout', function(req, res) {
     }
 });
 
-router.post('/toplist', function(req, res) {
+router.get('/toplist', function(req, res) {
     if(req.isAuthenticated()) {
-        res.status(200).send(user.rankingUsers());
+        var list = userfunctions.rankingUsers();
+        list.exec(function(err, docs) {
+            if (err) {
+                res.status(403).send("List not found");
+            } else {
+                res.status(200).send(docs);
+            }
+        });
     } else {
         res.status(403).send("No toplist");
     }
@@ -60,10 +67,11 @@ router.post('/toplist', function(req, res) {
 
 router.post('/newquiz', function(req, res) {
     if (req.isAuthenticated() && req.session.passport.user.admin) {
-        quiz.addNewQuiz(req.body.name, req.body.questions);
+        // TODO van-e id-ja a kvíznek?
+        quizfunctions.addNewQuiz(req.body.id,req.body.name, req.body.questions);
         res.status(200).send("Quiz added");
     } else {
-        res.status(403).send("Couldn't add quiz");
+        res.status(403).send("Couldn't add quiz, login first");
     }
 });
 
@@ -79,10 +87,38 @@ router.get('/quiz', function(req, res) {
             }
         });
     } else {
-        res.status(403).send("Couldn't get quiz");
+        res.status(403).send("Couldn't get quiz, login first");
     }
 });
 
+router.get('/allquiz', function(req, res) {
+    if (req.isAuthenticated()) {
+        var q = quizfunctions.findAllQuiz();        
+        q.exec(function(err, docs){
+            if (err) {
+                res.status(403).send("Quiz not found");
+            } else {
+                res.status(200).send(docs);
+            }
+        });
+    } else {
+        res.status(403).send("Couldn't get quiz, login first");
+    }
+});
+
+router.post('/sendscore', function(req, res) {
+    if (req.isAuthenticated()) {
+        userfunctions.updateScore(req.body.username, req.body.score);
+        res.status(200).send("updated!"); 
+    } else {
+        res.status(403).send("Login first"); 
+    }
+});
+
+// Ezek nem is kellenek?
+
+
+/*
 router.post('/deletequiz', function(req, res) {
     if (req.isAuthenticated() && res.session.passport.user.admin) {
         quiz.deleteQuiz(req.body.name, () => {
@@ -91,18 +127,9 @@ router.post('/deletequiz', function(req, res) {
     } else {
         res.status(403).send("Couldn't delete quiz");
     }
-});
+});*/
 
-router.post('/sendscore', function(req, res) {
-    if (req.isAuthenticated()) {
-        user.updateScore(req.body.username, req.body.score, () => {
-             res.status(200).send("updated!"); 
-        });
-    }
-});
-
-// Ezek nem is kellenek?
-
+/*
 router.get('/', function(req, res) {
     console.log("Query parameterek", req.query);
     console.log(req.session.passport.user);
@@ -122,5 +149,6 @@ router.get('/users', function(req, res) {
         return res.status(403).send("Unauthorized access");
     }
 })
+*/
 
 module.exports = router;
