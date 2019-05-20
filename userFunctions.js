@@ -16,5 +16,5 @@ module.exports.updateScore = function(name, score) {
 }
 
 module.exports.findOneUser = function(name) {
-  return quizSchema.find({ username: name})
+  return userSchema.find({ username: name})
 }

@@ -26,17 +26,19 @@ router.post('/login', function (req, res) {
     if (req.body.username && req.body.password) {
         passport.authenticate('local', function (error, username) {
             if (error) {
-                return res.status(403).send(error);
+                return res.status(403).send("error: " + error);
             } else {
                 req.logIn(username, function (error) {
-                    if (error) return res.status(500).send(error);
+                    if (error) {
+                        return res.status(500).send(error);
+                    }
+
                     var u = userfunctions.findOneUser(req.body.username);
-                    console.log(req.body.username);
                     u.exec(function(err, docs) {
                         if (err) {
                             res.status(403).send("Error");
                         } else {
-                            res.status(200).send(docs)
+                            res.status(200).send(docs);
                         }
                     });
                 })
