@@ -8,8 +8,6 @@ var router = express.Router();
 var quizfunctions = require('./quizFunctions.js');
 var userfunctions = require('./userfunctions.js');
 
-quiz = new quizModel();
-user = new userModel();
 
 router.post('/register', function(req, res) {
     if(!req.body.username || !req.body.password) {
@@ -32,7 +30,15 @@ router.post('/login', function (req, res) {
             } else {
                 req.logIn(username, function (error) {
                     if (error) return res.status(500).send(error);
-                    return res.status(200).send("login successful");
+                    var u = userfunctions.findOneUser(req.body.username);
+                    console.log(req.body.username);
+                    u.exec(function(err, docs) {
+                        if (err) {
+                            res.status(403).send("Error");
+                        } else {
+                            res.status(200).send(docs)
+                        }
+                    });
                 })
             }
         })(req, res);

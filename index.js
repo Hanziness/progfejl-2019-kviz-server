@@ -87,14 +87,13 @@ app.use(passport.session());
 app.use('/', require('./routes'));
 app.use('/proba', require('./routes'));
 
-// process.env.DEBUG_QUIZ = true;
+var quizfunctions = require('./quizFunctions.js');
 
-
-const xl = require('excel4node');
-
+process.env.DEBUG_QUIZ = true;
 if (process.env.DEBUG_QUIZ) {
     console.log('exporting excel table...');
 
+    var xl = require('excel4node');
     var wb = new xl.Workbook();
 
     var style = wb.createStyle({
@@ -105,34 +104,56 @@ if (process.env.DEBUG_QUIZ) {
         numberFormat: '$#,##0.00; ($#,##0.00); -',
     });
 
+    var quizes;
+    q = quizfunctions.findAllQuiz().exec(function(err, docs) {
+        console.log("fgv-en belül!")
+        if (err) {
+            console.log("error");
+        } else {
+            quizes = docs;
+            console.log(quizes.length);
 
-    quizes = quizModel.findAll();
-    
-    for (var i = 0; i < quizes.length; i++) {
-        var actualQuiz = quizes[i];
-        var name = actualQuiz.quiz_nev;
-        var ws = wb.addWorksheet(name);
-
-        for (var j = 0; j < actualQuiz.kerdesek.length; j++) {
-            var currentQuestion = actualQuiz.kerdesek[i];
-            ws.cell(i+1, 1).string(currentQuestion.leiras);
-            
-            var helyes = 0;
-            var k;
-            for (k = 0; k < valaszok.length; k++) {
-                ws.cell(i+1, 1+k+1).string(currentQuestion.valaszok[k].nev);
-                if (currentQuestion.valaszok[k].helyes) {
-                    helyes = k;
+            for (var i = 0; i < quizes.length; i++) {
+                var actualQuiz = quizes[i];
+                var name = actualQuiz.quiz_nev;
+                var ws = wb.addWorksheet(name);
+        
+                for (var j = 0; j < actualQuiz.kerdesek.length; j++) {
+                    var currentQuestion = actualQuiz.kerdesek[i];
+                    ws.cell(i+1, 1).string(currentQuestion.leiras);
+                    
+                    var helyes = 0;
+                    var k;
+                    for (k = 0; k < valaszok.length; k++) {
+                        ws.cell(i+1, 1+k+1).string(currentQuestion.valaszok[k].nev);
+                        if (currentQuestion.valaszok[k].helyes) {
+                            helyes = k;
+                        }
+                    }
+        
+                    ws.cell(i+1, 1+k+1).string(helyes);
+        
                 }
+        
             }
 
-            ws.cell(i+1, 1+k+1).string(helyes);
-
+            if (quizes.length == 0) {
+                var ws = wb.addWorksheet("Worksheet 1");
+            }
+        
+            wb.write('quizes.xlsx', function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("no error!");
+                    process.exit();
+                }
+            });
         }
-
-    }
-
-    wb.write('quizes.xlsx');
+    });
+    
+    console.log("Idekint: " + quizes);
+    
 
 } else {
     app.listen(5000, function() {

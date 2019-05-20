@@ -14,3 +14,7 @@ module.exports.updateScore = function(name, score) {
   // TODO
   console.log(name + " " + score);
 }
+
+module.exports.findOneUser = function(name) {
+  return quizSchema.find({ username: name})
+}
