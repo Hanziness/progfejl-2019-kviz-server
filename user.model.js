@@ -8,7 +8,7 @@ var userSchema = new mongoose.Schema({
     password: {type: String, required: true},
     admin: {type: Boolean, required: true},
     pontszam: {type: Number}
-}, {collection: 'users'});
+}, {collection: 'Users'});
 
 userSchema.pre('save', function(next) {
     var user = this;

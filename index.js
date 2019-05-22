@@ -22,7 +22,7 @@ const cors = require('cors');
 
 // docker run -d -p 27017:27017 -v $PWD/mongo:/etc/mongo --name mymongo mongo
 
-const dbUrl = "mongodb+srv://ocean:man@cluster0-zqs1c.mongodb.net/test?retryWrites=true";
+const dbUrl = "mongodb+srv://ocean:man@cluster0-zqs1c.mongodb.net/Quizes?retryWrites=true";
 
 app.set('dbUrl', dbUrl);
 
