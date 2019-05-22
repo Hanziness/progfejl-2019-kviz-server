@@ -11,8 +11,20 @@ module.exports.rankingUsers = function () {
 }
 
 module.exports.updateScore = function(name, score) {
-  // TODO
-  console.log(name + " " + score);
+  
+  score = Number.parseInt(score);
+  userSchema.findOne({
+    username: name
+  }).exec((err, res) => {
+    let currScore = Number.parseInt(res.pontszam);
+    userSchema.updateOne({
+      username: name
+    }, {
+      pontszam: currScore + score
+    }).exec((err, res) => {
+      console.debug("User " + name + " score updated to " + (currScore + score));
+    })
+  });
 }
 
 module.exports.findOneUser = function(name) {
