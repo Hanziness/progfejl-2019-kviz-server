@@ -12,8 +12,8 @@ module.exports.deleteQuiz = function(qName) {
   return quizSchema.deleteOne({ quiz_nev: qName })
 }
 
-module.exports.findOneQuiz = function(qName) {
-  return quizSchema.find({ quiz_nev: qName})
+module.exports.findOneQuiz = function(qId) {
+  return quizSchema.findById(qId)
 }
 
 module.exports.findAllQuiz = function() {

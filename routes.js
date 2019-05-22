@@ -85,8 +85,8 @@ router.post('/newquiz', function(req, res) {
 
 router.get('/quiz', function(req, res) {
     if (req.isAuthenticated()) {
-        console.log(req.query.name);
-        var q = quizfunctions.findOneQuiz(req.query.name);        
+        console.log(req.query.id);
+        var q = quizfunctions.findOneQuiz(req.query.id);        
         q.exec(function(err, docs){
             if (err) {
                 res.status(403).send("Quiz not found");
