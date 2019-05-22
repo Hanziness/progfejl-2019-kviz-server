@@ -4,10 +4,11 @@ var userSchema = mongoose.model('user')
 const quizFunctions = require('./quizFunctions')
 
 module.exports.rankingUsers = function () {
-  var allUsersArray = quizFunctions.findAllQuiz() // TODO ezek így kvízek
-  // TODO TypeError: Invalid sort() argument. Must be a string, object, or array.
-  allUsersArray.sort((user1, user2) => (user1.pontszam > user2.pontszam) ? 1 : -1)
-  return allUsersArray
+  var allUsersArray = userSchema.find({
+    admin: false
+  }, {'username' : 1, 'pontszam': 1, '_id': 0}); // Csak a 'username' és 'pontszam' mezőket adja vissza
+
+  return allUsersArray.sort({pontszam: 'descending'});
 }
 
 module.exports.updateScore = function(name, score) {
