@@ -10,8 +10,8 @@ module.exports.addNewQuiz = function(qId, qName, qKerdesek) {
     kerdesek: qKerdesek
   })
 }
-module.exports.deleteQuiz = function(qName) {
-  return quizSchema.deleteOne({ quiz_nev: qName })
+module.exports.deleteQuiz = function(qId) {
+  return quizSchema.deleteOne({ _id: mongoose.Types.ObjectId(qId) })
 }
 
 module.exports.findOneQuiz = function(qId) {

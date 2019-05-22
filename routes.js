@@ -124,8 +124,10 @@ router.post('/sendscore', function(req, res) {
 });
 
 router.post('/deletequiz', function(req, res) {
-    if (req.isAuthenticated() && res.session.passport.user.admin) {
-        quizfunctions.delete(req.body.id);
+    if (req.isAuthenticated() && req.session.passport.user.admin) {
+        quizfunctions.deleteQuiz(req.body.id).exec((err, res) => {
+            console.debug("Deleted " + res.ok + " / " + res.n + " quiz(zes).");
+        });
         res.status(200).send("deleted succesfully");
     } else {
         res.status(403).send("Couldn't delete quiz");
