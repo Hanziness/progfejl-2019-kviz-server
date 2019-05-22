@@ -89,7 +89,7 @@ app.use('/proba', require('./routes'));
 
 var quizfunctions = require('./quizFunctions.js');
 
-//process.env.DEBUG_QUIZ = true;
+process.env.DEBUG_QUIZ = true;
 if (process.env.DEBUG_QUIZ) {
     console.log('exporting excel table...');
 
@@ -106,32 +106,38 @@ if (process.env.DEBUG_QUIZ) {
 
     var quizes;
     q = quizfunctions.findAllQuiz().exec(function(err, docs) {
-        console.log("fgv-en belül!")
         if (err) {
             console.log("error");
         } else {
+            console.log("export started...");
             quizes = docs;
-            console.log(quizes.length);
 
             for (var i = 0; i < quizes.length; i++) {
                 var actualQuiz = quizes[i];
                 var name = actualQuiz.quiz_nev;
                 var ws = wb.addWorksheet(name);
-        
+
                 for (var j = 0; j < actualQuiz.kerdesek.length; j++) {
-                    var currentQuestion = actualQuiz.kerdesek[i];
-                    ws.cell(i+1, 1).string(currentQuestion.leiras);
+                    var currentQuestion = actualQuiz.kerdesek[j];
+
+                    ws.cell(j+1, 1).string(currentQuestion.leiras);
                     
-                    var helyes = 0;
+                    var helyes = "";
                     var k;
+                    var valaszok = currentQuestion.valaszok;
                     for (k = 0; k < valaszok.length; k++) {
-                        ws.cell(i+1, 1+k+1).string(currentQuestion.valaszok[k].nev);
+                        ws.cell(j+1, 1+k+1+1).string(currentQuestion.valaszok[k].nev);
                         if (currentQuestion.valaszok[k].helyes) {
-                            helyes = k;
+                            if (helyes === "") {
+                                helyes = helyes + (k+1);
+                            } else {
+                                helyes = helyes + ", " + (k+1);
+                            }
+                            
                         }
                     }
         
-                    ws.cell(i+1, 1+k+1).string(helyes);
+                    ws.cell(j+1, 2).string(helyes);
         
                 }
         
@@ -145,14 +151,12 @@ if (process.env.DEBUG_QUIZ) {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log("no error!");
+                    console.log("exporting finished!");
                     process.exit();
                 }
             });
         }
     });
-    
-    console.log("Idekint: " + quizes);
     
 
 } else {
