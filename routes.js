@@ -86,7 +86,7 @@ router.post('/newquiz', function(req, res) {
 router.get('/quiz', function(req, res) {
     if (req.isAuthenticated()) {
         console.log(req.query.id);
-        var q = quizfunctions.findOneQuiz(req.query.id);        
+        var q = quizfunctions.findOneQuiz(req.query.id);
         q.exec(function(err, docs){
             if (err) {
                 res.status(403).send("Quiz not found");
@@ -123,19 +123,14 @@ router.post('/sendscore', function(req, res) {
     }
 });
 
-// Ezek nem is kellenek?
-
-
-/*
 router.post('/deletequiz', function(req, res) {
     if (req.isAuthenticated() && res.session.passport.user.admin) {
-        quiz.deleteQuiz(req.body.name, () => {
-            res.status(200).send("deleted succesfully");
-        });
+        quizfunctions.delete(req.body.id);
+        res.status(200).send("deleted succesfully");
     } else {
         res.status(403).send("Couldn't delete quiz");
     }
-});*/
+});
 
 /*
 router.get('/', function(req, res) {
