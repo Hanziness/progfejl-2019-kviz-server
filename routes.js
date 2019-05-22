@@ -6,7 +6,7 @@ const quizModel = mongoose.model('quiz');
 var router = express.Router();
 
 var quizfunctions = require('./quizFunctions.js');
-var userfunctions = require('./userfunctions.js');
+var userfunctions = require('./userFunctions.js');
 
 
 router.post('/register', function(req, res) {
