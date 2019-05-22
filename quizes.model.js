@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-var ObjectId = mongoose.Schema.Types.ObjectId;
+var ObjectId = mongoose.Types.ObjectId;
 
 var quizSchema = new mongoose.Schema(
   {
