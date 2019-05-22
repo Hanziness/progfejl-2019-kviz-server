@@ -9,7 +9,7 @@ var quizSchema = new mongoose.Schema(
       { leiras: String, valaszok: [{ nev: String, helyes: Boolean }] },
     ],
   },
-  { collection: 'quizes' }
+  { collection: 'Quizes' }
 )
 
 mongoose.model('quiz', quizSchema)
